@@ -1,6 +1,6 @@
-# CFChem
+# CFChemDb
 
-CFChem refers to the CFDE Cheminformatics Database and Development System,
+CFChemDb refers to the CFDE Cheminformatics Database and Development System,
 designed for chemicals (small molecules) with data from one or multiple
 Common Fund projects and datasets.
 
@@ -21,6 +21,7 @@ The CFChemDb can be built with the following workflow.
 * [Go\_cfchem\_DbLoad\_GlyGen.sh](sh/Go_cfchem_DbLoad_GlyGen.sh)
 * [Go\_cfchem\_DbLoad\_ReproTox.sh](sh/Go_cfchem_DbLoad_ReproTox.sh)
 * [Go\_cfchem\_DbPostprocess.sh](sh/Go_cfchem_DbPostprocess.sh)
+* [Go\_cfchem\_DbAddProperties.sh](sh/Go_cfchem_DbAddProperties.sh)
 
 ## Docker
 

@@ -1,4 +1,4 @@
-# CFChemDb
+# CFChemDb <img align="right" src="/doc/images/cfde_logo.png" height="120">
 
 CFChemDb refers to the CFDE Cheminformatics Database and Development System,
 designed for chemicals (small molecules) with data from one or multiple
@@ -42,3 +42,8 @@ The database is Dockerized, for flexible deployment and reuse.
 ## Demo notebook
 
 * [CFChemDb_Demo.ipynb](https://github.com/jeremyjyang/rdkit-tools/blob/master/python/CFChemDb_Demo.ipynb)
+
+## See also
+
+* [rdkit-tools](https://github.com/jeremyjyang/rdkit-tools)
+* [idg-cfde](https://github.com/druggablegenome/idg-cfde)

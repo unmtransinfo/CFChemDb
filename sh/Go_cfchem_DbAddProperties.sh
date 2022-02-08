@@ -18,8 +18,56 @@ if [ ! -e $TMPDIR ]; then
 fi
 #
 ###
-# SMILES from molecules table:
-psql -e -d $DBNAME -c "COPY (SELECT cansmi, id FROM mols ORDER BY id) TO STDOUT WITH (FORMAT CSV,HEADER,DELIMITER E'\t')" \
+#
+function FixColumnTypes {
+  dbname=$1
+  tname=$2
+  propnames=$3
+  for colname in $propnames ; do
+    if [ "$(echo $colname |grep 'count')" -o "$(echo $colname |grep '^num_')" ]; then
+      psql -e -d $DBNAME -c "ALTER TABLE $TNAME ALTER COLUMN $colname TYPE INT USING $colname::INTEGER"
+      printf "Column ${TNAME}.${colname} altered to INT.\n"
+    elif [ "$(echo $colname |grep 'mol_wt')" -o "$(echo $colname |grep 'partial_charge')" -o "$(echo $colname |grep 'fraction')" -o "$(echo $colname |grep '_log_p')" ]; then
+      psql -e -d $DBNAME -c "ALTER TABLE $TNAME ALTER COLUMN $colname TYPE FLOAT USING $colname::FLOAT"
+      printf "Column ${TNAME}.${colname} altered to FLOAT.\n"
+    else
+      printf "Column ${TNAME}.${colname} unaltered.\n"
+    fi
+  done
+}
+#
+# Input TSV cols: SMILES, MOL_ID, PROP1[, PROP2, ...] (1+ properties)
+function LoadPropertiesFile {
+  propfile=$1
+  dbname=$2
+  tname=$3
+  colnames=$(cat ${propfile} |head -1 |sed 's/\([a-z]\)\([A-Z]\)/\1_\2/g'|tr '[:upper:]' '[:lower:]')
+  printf "colnames: ${colnames}\n"
+  propnames=$(echo $colnames |sed 's/smiles\s//' |sed 's/name\s//')
+  n_props=$(echo $propnames |wc -w)
+  printf "propnames ($n_props): ${propnames}\n"
+  for propname in $propnames ; do
+    psql -e -d $dbname -c "ALTER TABLE $tname ADD COLUMN $propname VARCHAR(32)"
+  done
+  #
+  N=$[$(cat ${propfile} |wc -l)-1]
+  i=0
+  while [ $i -lt $N ]; do
+          i=$[$i + 1]
+          line=$(cat ${propfile} |sed '1d' |sed "${i}q;d")
+          mol_id=$(echo "$line" |awk -F '\t' '{print $2}')
+    vals=$(echo $line |awk '{$1=$2=""; print $0}')
+    vals=$(echo $vals |sed "s/\s/', '/g" |sed "s/^\(.*\)$/'\1'/")
+    printf "${i}/${N}. mol_id=${mol_id}; adding ${n_props} properties: $(echo $propnames |sed 's/\s/, /g')\n"
+    psql -d $dbname -c "UPDATE $tname SET ($(echo $propnames |sed 's/\s/, /g')) = ROW(${vals}) WHERE mol_id = ${mol_id}"
+  done
+  #
+  FixColumnTypes $dbname $tname "$propnames"
+}
+#
+###
+# SMILES,MOL_ID from mols table:
+psql -d $DBNAME -c "COPY (SELECT cansmi, id FROM mols ORDER BY id) TO STDOUT WITH (FORMAT CSV,HEADER,DELIMITER E'\t')" \
 	>${TMPDIR}/${DBNAME}_mols.smi
 #
 ###
@@ -53,42 +101,7 @@ else
 	printf "Descriptors file exists: ${propfile}\n"
 fi
 #
-###
-colnames=$(cat ${propfile} |head -1 |sed 's/\([a-z]\)\([A-Z]\)/\1_\2/g'|tr '[:upper:]' '[:lower:]')
-printf "colnames: ${colnames}\n"
-propnames=$(echo $colnames |sed 's/smiles\s//' |sed 's/name\s//')
-N_props=$(echo $propnames |wc -w)
-printf "propnames ($N_props): ${propnames}\n"
-for propname in $propnames ; do
-	psql -e -d $DBNAME -c "ALTER TABLE $TNAME ADD COLUMN $propname VARCHAR(32)"
-done
-#
-N=$[$(cat ${propfile} |wc -l)-1]
-i=0
-while [ $i -lt $N ]; do
-        i=$[$i + 1]
-        line=$(cat ${propfile} |sed '1d' |sed "${i}q;d")
-        mol_id=$(echo "$line" |awk -F '\t' '{print $2}')
-	vals=$(echo $line |awk '{$1=$2=""; print $0}')
-	vals=$(echo $vals |sed "s/\s/', '/g" |sed "s/^\(.*\)$/'\1'/")
-	printf "${i}/${N}. mol_id=${mol_id} (${N_props} properties added)\n"
-	psql -d $DBNAME -c "UPDATE $TNAME SET ($(echo $propnames |sed 's/\s/, /g')) = ROW(${vals}) WHERE mol_id = ${mol_id}"
-done
-#
-#
-for colname in $propnames ; do
-	if [ "$(echo $colname |grep 'count')" -o "$(echo $colname |grep '^num_')" ]; then
-		psql -e -d $DBNAME -c "ALTER TABLE $TNAME ALTER COLUMN $colname TYPE INT USING $colname::INTEGER"
-		printf "Column ${TNAME}.${colname} altered to INT.\n"
-	elif [ "$(echo $colname |grep 'mol_wt')" -o "$(echo $colname |grep 'partial_charge')" ]; then
-		psql -e -d $DBNAME -c "ALTER TABLE $TNAME ALTER COLUMN $colname TYPE FLOAT USING $colname::FLOAT"
-		printf "Column ${TNAME}.${colname} altered to FLOAT.\n"
-	else
-		printf "Column ${TNAME}.${colname} unaltered.\n"
-	fi
-done
-#
-#
+LoadPropertiesFile $propfile $DBNAME $TNAME
 #
 #####################################################################
 # Lipinski properties:
@@ -107,45 +120,12 @@ else
 	printf "Properties file exists: ${propfile}\n"
 fi
 #
-###
-colnames=$(cat ${propfile} |head -1 |sed 's/\([a-z]\)\([A-Z]\)/\1_\2/g'|tr '[:upper:]' '[:lower:]')
-printf "colnames: ${colnames}\n"
-propnames=$(echo $colnames |sed 's/smiles\s//' |sed 's/name\s//')
-N_props=$(echo $propnames |wc -w)
-printf "propnames ($N_props): ${propnames}\n"
-for propname in $propnames ; do
-	psql -e -d $DBNAME -c "ALTER TABLE $TNAME ADD COLUMN $propname VARCHAR(32)"
-done
-#
-N=$[$(cat ${propfile} |wc -l)-1]
-i=0
-while [ $i -lt $N ]; do
-        i=$[$i + 1]
-        line=$(cat ${propfile} |sed '1d' |sed "${i}q;d")
-        mol_id=$(echo "$line" |awk -F '\t' '{print $2}')
-	vals=$(echo $line |awk '{$1=$2=""; print $0}')
-	vals=$(echo $vals |sed "s/\s/', '/g" |sed "s/^\(.*\)$/'\1'/")
-	printf "${i}/${N}. mol_id=${mol_id} (${N_props} properties added)\n"
-	psql -d $DBNAME -c "UPDATE $TNAME SET ($(echo $propnames |sed 's/\s/, /g')) = ROW(${vals}) WHERE id = ${mol_id}"
-done
-#
-#
-for colname in $propnames ; do
-	if [ "$(echo $colname |grep 'count')" -o "$(echo $colname |grep '^num_')" ]; then
-		psql -e -d $DBNAME -c "ALTER TABLE $TNAME ALTER COLUMN $colname TYPE INT USING $colname::INTEGER"
-		printf "Column ${TNAME}.${colname} altered to INT.\n"
-	elif [ "$(echo $colname |grep 'fraction')" ]; then
-		psql -e -d $DBNAME -c "ALTER TABLE $TNAME ALTER COLUMN $colname TYPE FLOAT USING $colname::FLOAT"
-		printf "Column ${TNAME}.${colname} altered to FLOAT.\n"
-	else
-		printf "Column ${TNAME}.${colname} unaltered.\n"
-	fi
-done
+LoadPropertiesFile $propfile $DBNAME $TNAME
 #
 #####################################################################
 # LogP
 propfile=${TMPDIR}/${DBNAME}_mols_logp.smi
-if [ ! -e "$logpfile" ]; then
+if [ ! -e "$propfile" ]; then
 	source $(dirname $CONDA_EXE)/../bin/activate rdktools
 	python3 -m rdktools.properties.App logp \
 		--i ${TMPDIR}/${DBNAME}_mols.smi \
@@ -153,35 +133,14 @@ if [ ! -e "$logpfile" ]; then
 		--o ${propfile} \
 		--iheader --oheader
 	conda deactivate
-	printf "LogP file generated: ${propfile}\n"
+	printf "Properties file generated: ${propfile}\n"
 else
-	printf "LogP file exists: ${propfile}\n"
+	printf "Properties file exists: ${propfile}\n"
 fi
 #
+LoadPropertiesFile $propfile $DBNAME $TNAME
+#
 ###
-colnames=$(cat ${propfile} |head -1 |sed 's/\([a-z]\)\([A-Z]\)/\1_\2/g'|tr '[:upper:]' '[:lower:]')
-printf "colnames: ${colnames}\n"
-propnames=$(echo $colnames |sed 's/smiles\s//' |sed 's/name\s//')
-N_props=$(echo $propnames |wc -w)
-printf "propnames ($N_props): ${propnames}\n"
-for propname in $propnames ; do
-	psql -e -d $DBNAME -c "ALTER TABLE $TNAME ADD COLUMN $propname VARCHAR(32)"
-done
-#
-N=$[$(cat ${propfile} |wc -l)-1]
-i=0
-while [ $i -lt $N ]; do
-        i=$[$i + 1]
-        line=$(cat ${propfile} |sed '1d' |sed "${i}q;d")
-        mol_id=$(echo "$line" |awk -F '\t' '{print $2}')
-	vals=$(echo $line |awk '{$1=$2=""; print $0}')
-	vals=$(echo $vals |sed "s/\s/', '/g" |sed "s/^\(.*\)$/'\1'/")
-	printf "${i}/${N}. mol_id=${mol_id} (${N_props} properties added)\n"
-	psql -d $DBNAME -c "UPDATE $TNAME SET ($(echo $propnames |sed 's/\s/, /g')) = ROW(${vals}) WHERE id = ${mol_id}"
-done
-#
-psql -e -d $DBNAME -c "ALTER TABLE $TNAME ALTER COLUMN wildman_crippen_logp TYPE FLOAT USING $colname::FLOAT"
-#
 #rm -rf $TMPDIR
 #
 printf "Elapsed time: %ds\n" "$[$(date +%s) - ${T0}]"

@@ -21,9 +21,10 @@ DOCKERPORT_DB=5442
 #
 ###
 # May need to stop and remove current container first:
-docker container ls -a
-docker container stop ${INAME_DB}_container
-docker container rm ${INAME_DB}_container
+if [ "$(docker container ls -a |grep ${INAME_DB}_container)" ]; then
+	docker container stop ${INAME_DB}_container
+	docker container rm ${INAME_DB}_container
+fi
 #
 # Note that "run" is equivalent to "create" + "start".
 docker run -dit --restart always --name "${INAME_DB}_container" \
@@ -40,6 +41,7 @@ sleep 10
 # Test db.
 docker exec "${INAME_DB}_container" sudo -u postgres psql -l
 #
-# Pw "easement" (was/or "foobar")
-psql -h localhost -p 5442 -d cfchemdb -U commoner -W -c "SELECT COUNT(*) FROM mols"
+# Pw "easement"
+psql -h localhost -p 5442 -d cfchemdb -U commoner -c "SELECT * FROM meta"
+psql -h localhost -p 5442 -d cfchemdb -U commoner -c "SELECT COUNT(*) FROM mols"
 #

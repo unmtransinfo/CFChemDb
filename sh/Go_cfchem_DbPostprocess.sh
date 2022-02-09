@@ -38,7 +38,7 @@ psql -d $DBNAME -c "UPDATE mols SET name = idg.name FROM idg WHERE idg.mol_id = 
 #
 ###
 # Version/timestamp:
-psql -d $DBNAME -c "INSERT INTO meta (field, value, description) VALUES ('timestamp', CURRENT_DATE::VARCHAR, 'Date of build.')"
+psql -d $DBNAME -c "UPDATE meta SET VALUE = CURRENT_DATE::VARCHAR WHERE field = 'timestamp'"
 ###
 # Create user:
 psql -d $DBNAME -c "CREATE ROLE www WITH LOGIN PASSWORD 'foobar'"

@@ -38,6 +38,9 @@ CREATE TABLE meta (
 	);
 __EOF__
 ###
+# Updated by postprocess script.
+psql -d $DBNAME -c "INSERT INTO meta (field, value, description) VALUES ('timestamp', CURRENT_DATE::VARCHAR, 'Date of build.')"
+###
 #
 printf "Elapsed time: %ds\n" "$[$(date +%s) - ${T0}]"
 #

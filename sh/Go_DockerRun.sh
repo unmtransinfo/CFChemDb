@@ -12,8 +12,8 @@ fi
 #
 cwd=$(pwd)
 #
-#VTAG="latest"
-VTAG="v1.0.0"
+VTAG="latest"
+#VTAG="v1.0.1"
 #
 ###
 # PostgreSQL db

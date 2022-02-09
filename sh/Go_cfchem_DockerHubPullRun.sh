@@ -45,3 +45,7 @@ docker exec "${INAME_DB}_container" sudo -u postgres psql -l
 psql -h localhost -p 5442 -d cfchemdb -U commoner -c "SELECT * FROM meta"
 psql -h localhost -p 5442 -d cfchemdb -U commoner -c "SELECT COUNT(*) FROM mols"
 #
+###
+# Copy this file to cloud server thus:
+# scp sh/Go_DockerHubPullRun.sh unmtid-dbs.net:~/bin/
+#

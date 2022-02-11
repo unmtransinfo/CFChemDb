@@ -31,17 +31,30 @@ fi
 #
 #####################################################################
 # 
-ofile=${TMPDIR}/${DBNAME}_mols_clusters.pkl
 #
-# With 331927 compounds, the error is
-# numpy.core._exceptions.MemoryError: Unable to allocate 410. GiB for an array
 #
 source $(dirname $CONDA_EXE)/../bin/activate rdktools
-python3 -m rdktools.fp.App ClusterMols \
+#
+###
+# With 331927 compounds, the error is
+# numpy.core._exceptions.MemoryError: Unable to allocate 410. GiB for an array
+#ofile=${TMPDIR}/${DBNAME}_mols_clusters.pkl
+#python3 -m rdktools.fp.App ClusterMols \
+#	--i ${TMPDIR}/${DBNAME}_mols.smi \
+#	--smilesColumn "cansmi" --idColumn "id" \
+#	--o ${ofile}
+###
+# --output_as_tsv: Output FPs as TSV with id and feature names as columns.
+# This file for input to Scikit-learn agglomerative (Ward) hierarchical
+# clustering.
+ofile=${TMPDIR}/${DBNAME}_mols_fp.pkl
+python3 -m rdktools.fp.App FingerprintMols \
 	--i ${TMPDIR}/${DBNAME}_mols.smi \
 	--smilesColumn "cansmi" --idColumn "id" \
+	--output_as_tsv \
 	--o ${ofile}
 conda deactivate
+#
 #
 #####################################################################
 #

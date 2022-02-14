@@ -1,0 +1,107 @@
+schema	table	column_name	data_type	source	description
+public	drugcentral	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
+public	drugcentral	cas_reg_no	character varying	DrugCentral	Chemical Abstracts Service (CAS) registry number
+public	drugcentral	formula	character varying	DrugCentral	Molecular formula for drug
+public	drugcentral	id	character varying	DrugCentral	DrugCentral molecule ID
+public	drugcentral	inchi	character varying	DrugCentral	InChI for molecule
+public	drugcentral	inchikey	character varying	DrugCentral	InChIkey for molecule
+public	drugcentral	mol_id	integer	CFChemDb	CFChemDb molecule ID
+public	drugcentral	molweight	double precision	DrugCentral	Molecular weight
+public	drugcentral	name	character varying	DrugCentral	Drug name
+public	drugcentral	smiles	character varying	DrugCentral	SMILES for molecule
+public	glygen	byonic	character varying	GlyGen	
+public	glygen	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
+public	glygen	chebi_id	character varying	GlyGen	
+public	glygen	fully_determined	character varying	GlyGen	
+public	glygen	glycam	character varying	GlyGen	
+public	glygen	glycan_type	character varying	GlyGen	
+public	glygen	glycoct	character varying	GlyGen	
+public	glygen	glygen_id	character varying	GlyGen	
+public	glygen	glytoucan_ac	character varying	GlyGen	
+public	glygen	glytoucan_id	character varying	GlyGen	
+public	glygen	gwb	character varying	GlyGen	
+public	glygen	inchi	character varying	GlyGen	InChI for molecule
+public	glygen	inchi_key	character varying	GlyGen	InChIkey for molecule
+public	glygen	iupac	character varying	GlyGen	
+public	glygen	mass	double precision	GlyGen	
+public	glygen	mass_pme	double precision	GlyGen	
+public	glygen	missing_score	character varying	GlyGen	
+public	glygen	mol_id	integer	CFChemDb	CFChemDb molecule ID
+public	glygen	number_monosaccharides	integer	GlyGen	
+public	glygen	pubchem_cid	character varying	GlyGen	PubChem compound ID (CID)
+public	glygen	pubchem_sid	character varying	GlyGen	PubChem substance ID (SID)
+public	glygen	smiles	character varying	GlyGen	SMILES for molecule
+public	glygen	wurcs	character varying	GlyGen	
+public	idg	activity_count	integer	IDG TCRD	Count of bioactivity data
+public	idg	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
+public	idg	mol_id	integer	CFChemDb	CFChemDb molecule ID
+public	idg	name	character varying	PubChem	Names selected heuristically for human readability.
+public	idg	pubchem_cid	character varying	IDG TCRD	PubChem compound ID (CID)
+public	idg	smiles	character varying	IDG TCRD	SMILES
+public	idg	target_count	integer	IDG TCRD	Count of protein targets associated with compound by bioactivity
+public	lincs	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
+public	lincs	compound_aliases	character varying	LINCS	
+public	lincs	id	character varying	LINCS	LINCS perturbagen ID
+public	lincs	inchi_key	character varying	LINCS	InChIkey for molecule
+public	lincs	moa	character varying	LINCS	
+public	lincs	mol_id	integer	CFChemDb	CFChemDb molecule ID
+public	lincs	pert_name	character varying	LINCS	LINCS perturbagen name
+public	lincs	sig_count	integer	LINCS	Count of expression signatures
+public	lincs	smiles	character varying	LINCS	SMILES for molecule
+public	lincs	target	character varying	LINCS	
+public	meta	description	character varying	CFChemDb	CFChemDb metadata: description of field
+public	meta	field	character varying	CFChemDb	CFChemDb metadata: field
+public	meta	value	character varying	CFChemDb	CFChemDb metadata: value
+public	mols	cansmi	character varying	RDKit, PostgreSql cartridge	CFChemDb RDKit canonical SMILES
+public	mols	ecfp	USER-DEFINED	RDKit, PostgreSql cartridge	RDKit Morgan fingerprints,  radius=2, approximately equivalent to ECFP4.
+public	mols	fp	USER-DEFINED	RDKit, PostgreSql cartridge	RDKit path-based (Daylight like) bitvector fingerprint with minPath=1, maxPath=7, size=2048
+public	mols	id	integer	PostgreSql primary key	CFChemDb molecule ID
+public	mols	molecule	USER-DEFINED	RDKit, PostgreSql cartridge	RDKit molecule object
+public	mols	name	character varying	PubChem	Names selected heuristically for human readability.
+public	properties	exact_mol_wt	double precision	RDKit, rdktools	Exact molecular weight of the molecule
+public	properties	fraction_csp3	double precision	RDKit, rdktools	Fraction of carbons sp3 hybridized
+public	properties	heavy_atom_count	integer	RDKit, rdktools	Non-H atom count
+public	properties	heavy_atom_mol_wt	double precision	RDKit, rdktools	Average molecular weight of the molecule ignoring hydrogens
+public	properties	max_abs_partial_charge	double precision	RDKit, rdktools	
+public	properties	max_partial_charge	double precision	RDKit, rdktools	
+public	properties	min_abs_partial_charge	double precision	RDKit, rdktools	
+public	properties	min_partial_charge	double precision	RDKit, rdktools	
+public	properties	mol_id	integer	CFChemDb	CFChemDb molecule ID
+public	properties	mol_wt	double precision	RDKit, rdktools	Average molecular weight of the molecule
+public	properties	nhohcount	integer	RDKit, rdktools	Count of NHs or OHs
+public	properties	nocount	integer	RDKit, rdktools	Count of Ns and Os
+public	properties	num_aliphatic_carbocycles	integer	RDKit, rdktools	Number of aliphatic (at least one non-aromatic bond) SSSR carbocycles
+public	properties	num_aliphatic_heterocycles	integer	RDKit, rdktools	Number of aliphatic (at least one non-aromatic bond) SSSR heterocycles
+public	properties	num_aliphatic_rings	integer	RDKit, rdktools	Number of aliphatic (at least one non-aromatic bond) SSSR rings
+public	properties	num_aromatic_carbocycles	integer	RDKit, rdktools	Number of aromatic SSSR carbocycles
+public	properties	num_aromatic_heterocycles	integer	RDKit, rdktools	Number of aromatic SSSR heterocycles
+public	properties	num_aromatic_rings	integer	RDKit, rdktools	Number of aromatic SSSR rings
+public	properties	num_hacceptors	integer	RDKit, rdktools	Standard Lipinski HBA definition (number of Ns and Os)
+public	properties	num_hdonors	integer	RDKit, rdktools	Standard Lipinski HBA definition (number of N-H and O-H bonds)
+public	properties	num_heteroatoms	integer	RDKit, rdktools	Number of heteroatoms
+public	properties	num_radical_electrons	integer	RDKit, rdktools	Number of radical electrons the molecule has (says nothing about spin state)
+public	properties	num_rotatable_bonds	integer	RDKit, rdktools	Number of rotatable bonds
+public	properties	num_saturated_carbocycles	integer	RDKit, rdktools	Number of saturated SSSR carbocycles
+public	properties	num_saturated_heterocycles	integer	RDKit, rdktools	Number of saturated SSSR heterocycles
+public	properties	num_saturated_rings	integer	RDKit, rdktools	Number of saturated SSSR rings
+public	properties	num_valence_electrons	integer	RDKit, rdktools	Number of valence electrons the molecule has
+public	properties	ring_count	integer	RDKit, rdktools	Number of SSSR rings
+public	properties	wildman_crippen_log_p	double precision	RDKit, rdktools	Default Wildman-Crippen LogP for a molecule
+public	refmet	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
+public	refmet	exactmass	character varying	RefMet	
+public	refmet	formula	character varying	RefMet	
+public	refmet	inchi_key	character varying	RefMet	InChIkey for molecule
+public	refmet	main_class	character varying	RefMet	
+public	refmet	mol_id	integer	CFChemDb	CFChemDb molecule ID
+public	refmet	pubchem_cid	integer	RefMet	PubChem compound ID (CID)
+public	refmet	refmet_name	character varying	RefMet	
+public	refmet	smiles	character varying	RefMet	SMILES for molecule
+public	refmet	sub_class	character varying	RefMet	
+public	refmet	super_class	character varying	RefMet	
+public	reprotox	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
+public	reprotox	cas_rn	character varying	ReproTox	
+public	reprotox	ls_id	character varying	ReproTox	
+public	reprotox	mol_id	integer	CFChemDb	CFChemDb molecule ID
+public	reprotox	pubchem_cid	character varying	ReproTox	PubChem compound ID (CID)
+public	reprotox	smiles	character varying	ReproTox	SMILES for molecule
+public	reprotox	term	character varying	ReproTox	

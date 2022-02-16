@@ -1,5 +1,5 @@
 
-# CFChemDb Data Dictionary (Csv2Markdown)
+# CFChemDb data dictionary (BioClients.util.pandas.Csv2Markdown)
 
 |     | schema   | table       | column_name                | data_type         | source                      | description                                                                                 |
 |-----|----------|-------------|----------------------------|-------------------|-----------------------------|---------------------------------------------------------------------------------------------|
@@ -15,18 +15,18 @@
 |   9 | public   | drugcentral | smiles                     | character varying | DrugCentral                 | SMILES for molecule                                                                         |
 |  10 | public   | glygen      | byonic                     | character varying | GlyGen                      |                                                                                             |
 |  11 | public   | glygen      | cansmi                     | character varying | CFChemDb                    | CFChemDb RDKit canonical SMILES                                                             |
-|  12 | public   | glygen      | chebi_id                   | character varying | GlyGen                      |                                                                                             |
+|  12 | public   | glygen      | chebi_id                   | character varying | GlyGen                      | ChEBI ID                                                                                    |
 |  13 | public   | glygen      | fully_determined           | character varying | GlyGen                      |                                                                                             |
 |  14 | public   | glygen      | glycam                     | character varying | GlyGen                      |                                                                                             |
 |  15 | public   | glygen      | glycan_type                | character varying | GlyGen                      |                                                                                             |
 |  16 | public   | glygen      | glycoct                    | character varying | GlyGen                      |                                                                                             |
-|  17 | public   | glygen      | glygen_id                  | character varying | GlyGen                      |                                                                                             |
+|  17 | public   | glygen      | glygen_id                  | character varying | GlyGen                      | GlyGen ID                                                                                   |
 |  18 | public   | glygen      | glytoucan_ac               | character varying | GlyGen                      |                                                                                             |
-|  19 | public   | glygen      | glytoucan_id               | character varying | GlyGen                      |                                                                                             |
-|  20 | public   | glygen      | gwb                        | character varying | GlyGen                      |                                                                                             |
+|  19 | public   | glygen      | glytoucan_id               | character varying | GlyGen                      | GlyTouCan ID                                                                                |
+|  20 | public   | glygen      | gwb                        | character varying | GlyGen                      | Genway Biotech catalog number                                                               |
 |  21 | public   | glygen      | inchi                      | character varying | GlyGen                      | InChI for molecule                                                                          |
 |  22 | public   | glygen      | inchi_key                  | character varying | GlyGen                      | InChIkey for molecule                                                                       |
-|  23 | public   | glygen      | iupac                      | character varying | GlyGen                      |                                                                                             |
+|  23 | public   | glygen      | iupac                      | character varying | GlyGen                      | IUPAC systematic name                                                                       |
 |  24 | public   | glygen      | mass                       | double precision  | GlyGen                      |                                                                                             |
 |  25 | public   | glygen      | mass_pme                   | double precision  | GlyGen                      |                                                                                             |
 |  26 | public   | glygen      | missing_score              | character varying | GlyGen                      |                                                                                             |
@@ -35,7 +35,7 @@
 |  29 | public   | glygen      | pubchem_cid                | character varying | GlyGen                      | PubChem compound ID (CID)                                                                   |
 |  30 | public   | glygen      | pubchem_sid                | character varying | GlyGen                      | PubChem substance ID (SID)                                                                  |
 |  31 | public   | glygen      | smiles                     | character varying | GlyGen                      | SMILES for molecule                                                                         |
-|  32 | public   | glygen      | wurcs                      | character varying | GlyGen                      |                                                                                             |
+|  32 | public   | glygen      | wurcs                      | character varying | GlyGen                      | Web3 Unique Representation of Carbohydrate Structures                                       |
 |  33 | public   | idg         | activity_count             | integer           | IDG TCRD                    | Count of bioactivity data                                                                   |
 |  34 | public   | idg         | cansmi                     | character varying | CFChemDb                    | CFChemDb RDKit canonical SMILES                                                             |
 |  35 | public   | idg         | mol_id                     | integer           | CFChemDb                    | CFChemDb molecule ID                                                                        |
@@ -44,10 +44,10 @@
 |  38 | public   | idg         | smiles                     | character varying | IDG TCRD                    | SMILES                                                                                      |
 |  39 | public   | idg         | target_count               | integer           | IDG TCRD                    | Count of protein targets associated with compound by bioactivity                            |
 |  40 | public   | lincs       | cansmi                     | character varying | CFChemDb                    | CFChemDb RDKit canonical SMILES                                                             |
-|  41 | public   | lincs       | compound_aliases           | character varying | LINCS                       |                                                                                             |
+|  41 | public   | lincs       | compound_aliases           | character varying | LINCS                       | Compound aliases                                                                            |
 |  42 | public   | lincs       | id                         | character varying | LINCS                       | LINCS perturbagen ID                                                                        |
 |  43 | public   | lincs       | inchi_key                  | character varying | LINCS                       | InChIkey for molecule                                                                       |
-|  44 | public   | lincs       | moa                        | character varying | LINCS                       |                                                                                             |
+|  44 | public   | lincs       | moa                        | character varying | LINCS                       | Mechanism of action                                                                         |
 |  45 | public   | lincs       | mol_id                     | integer           | CFChemDb                    | CFChemDb molecule ID                                                                        |
 |  46 | public   | lincs       | pert_name                  | character varying | LINCS                       | LINCS perturbagen name                                                                      |
 |  47 | public   | lincs       | sig_count                  | integer           | LINCS                       | Count of expression signatures                                                              |
@@ -66,10 +66,10 @@
 |  60 | public   | properties  | fraction_csp3              | double precision  | RDKit, rdktools             | Fraction of carbons sp3 hybridized                                                          |
 |  61 | public   | properties  | heavy_atom_count           | integer           | RDKit, rdktools             | Non-H atom count                                                                            |
 |  62 | public   | properties  | heavy_atom_mol_wt          | double precision  | RDKit, rdktools             | Average molecular weight of the molecule ignoring hydrogens                                 |
-|  63 | public   | properties  | max_abs_partial_charge     | double precision  | RDKit, rdktools             |                                                                                             |
-|  64 | public   | properties  | max_partial_charge         | double precision  | RDKit, rdktools             |                                                                                             |
-|  65 | public   | properties  | min_abs_partial_charge     | double precision  | RDKit, rdktools             |                                                                                             |
-|  66 | public   | properties  | min_partial_charge         | double precision  | RDKit, rdktools             |                                                                                             |
+|  63 | public   | properties  | max_abs_partial_charge     | double precision  | RDKit, rdktools             | Max absolute Gasteiger partial charge, any atom                                             |
+|  64 | public   | properties  | max_partial_charge         | double precision  | RDKit, rdktools             | Max Gasteiger partial charge, any atom                                                      |
+|  65 | public   | properties  | min_abs_partial_charge     | double precision  | RDKit, rdktools             | Min absolute Gasteiger partial charge, any atom                                             |
+|  66 | public   | properties  | min_partial_charge         | double precision  | RDKit, rdktools             | Min Gasteiger partial charge, any atom                                                      |
 |  67 | public   | properties  | mol_id                     | integer           | CFChemDb                    | CFChemDb molecule ID                                                                        |
 |  68 | public   | properties  | mol_wt                     | double precision  | RDKit, rdktools             | Average molecular weight of the molecule                                                    |
 |  69 | public   | properties  | nhohcount                  | integer           | RDKit, rdktools             | Count of NHs or OHs                                                                         |
@@ -93,19 +93,19 @@
 |  87 | public   | properties  | wildman_crippen_log_p      | double precision  | RDKit, rdktools             | Default Wildman-Crippen LogP for a molecule                                                 |
 |  88 | public   | refmet      | cansmi                     | character varying | CFChemDb                    | CFChemDb RDKit canonical SMILES                                                             |
 |  89 | public   | refmet      | exactmass                  | character varying | RefMet                      |                                                                                             |
-|  90 | public   | refmet      | formula                    | character varying | RefMet                      |                                                                                             |
+|  90 | public   | refmet      | formula                    | character varying | RefMet                      | Molecular formula                                                                           |
 |  91 | public   | refmet      | inchi_key                  | character varying | RefMet                      | InChIkey for molecule                                                                       |
 |  92 | public   | refmet      | main_class                 | character varying | RefMet                      |                                                                                             |
 |  93 | public   | refmet      | mol_id                     | integer           | CFChemDb                    | CFChemDb molecule ID                                                                        |
 |  94 | public   | refmet      | pubchem_cid                | integer           | RefMet                      | PubChem compound ID (CID)                                                                   |
-|  95 | public   | refmet      | refmet_name                | character varying | RefMet                      |                                                                                             |
+|  95 | public   | refmet      | refmet_name                | character varying | RefMet                      | RefMet compound name                                                                        |
 |  96 | public   | refmet      | smiles                     | character varying | RefMet                      | SMILES for molecule                                                                         |
 |  97 | public   | refmet      | sub_class                  | character varying | RefMet                      |                                                                                             |
 |  98 | public   | refmet      | super_class                | character varying | RefMet                      |                                                                                             |
 |  99 | public   | reprotox    | cansmi                     | character varying | CFChemDb                    | CFChemDb RDKit canonical SMILES                                                             |
-| 100 | public   | reprotox    | cas_rn                     | character varying | ReproTox                    |                                                                                             |
-| 101 | public   | reprotox    | ls_id                      | character varying | ReproTox                    |                                                                                             |
+| 100 | public   | reprotox    | cas_rn                     | character varying | ReproTox                    | Chemical Abstracts Service (CAS) registry number                                            |
+| 101 | public   | reprotox    | ls_id                      | character varying | ReproTox                    | LeadScope molecule ID                                                                       |
 | 102 | public   | reprotox    | mol_id                     | integer           | CFChemDb                    | CFChemDb molecule ID                                                                        |
 | 103 | public   | reprotox    | pubchem_cid                | character varying | ReproTox                    | PubChem compound ID (CID)                                                                   |
 | 104 | public   | reprotox    | smiles                     | character varying | ReproTox                    | SMILES for molecule                                                                         |
-| 105 | public   | reprotox    | term                       | character varying | ReproTox                    |                                                                                             |
+| 105 | public   | reprotox    | term                       | character varying | ReproTox                    | Anatomy/disease area term (Blood, CNS, Cardiovascular)                                      |

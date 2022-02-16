@@ -11,18 +11,18 @@ public	drugcentral	name	character varying	DrugCentral	Drug name
 public	drugcentral	smiles	character varying	DrugCentral	SMILES for molecule
 public	glygen	byonic	character varying	GlyGen	
 public	glygen	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
-public	glygen	chebi_id	character varying	GlyGen	
+public	glygen	chebi_id	character varying	GlyGen	ChEBI ID
 public	glygen	fully_determined	character varying	GlyGen	
 public	glygen	glycam	character varying	GlyGen	
 public	glygen	glycan_type	character varying	GlyGen	
 public	glygen	glycoct	character varying	GlyGen	
-public	glygen	glygen_id	character varying	GlyGen	
+public	glygen	glygen_id	character varying	GlyGen	GlyGen ID
 public	glygen	glytoucan_ac	character varying	GlyGen	
-public	glygen	glytoucan_id	character varying	GlyGen	
-public	glygen	gwb	character varying	GlyGen	
+public	glygen	glytoucan_id	character varying	GlyGen	GlyTouCan ID
+public	glygen	gwb	character varying	GlyGen	Genway Biotech catalog number
 public	glygen	inchi	character varying	GlyGen	InChI for molecule
 public	glygen	inchi_key	character varying	GlyGen	InChIkey for molecule
-public	glygen	iupac	character varying	GlyGen	
+public	glygen	iupac	character varying	GlyGen	IUPAC systematic name
 public	glygen	mass	double precision	GlyGen	
 public	glygen	mass_pme	double precision	GlyGen	
 public	glygen	missing_score	character varying	GlyGen	
@@ -31,7 +31,7 @@ public	glygen	number_monosaccharides	integer	GlyGen
 public	glygen	pubchem_cid	character varying	GlyGen	PubChem compound ID (CID)
 public	glygen	pubchem_sid	character varying	GlyGen	PubChem substance ID (SID)
 public	glygen	smiles	character varying	GlyGen	SMILES for molecule
-public	glygen	wurcs	character varying	GlyGen	
+public	glygen	wurcs	character varying	GlyGen	Web3 Unique Representation of Carbohydrate Structures
 public	idg	activity_count	integer	IDG TCRD	Count of bioactivity data
 public	idg	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
 public	idg	mol_id	integer	CFChemDb	CFChemDb molecule ID
@@ -40,10 +40,10 @@ public	idg	pubchem_cid	character varying	IDG TCRD	PubChem compound ID (CID)
 public	idg	smiles	character varying	IDG TCRD	SMILES
 public	idg	target_count	integer	IDG TCRD	Count of protein targets associated with compound by bioactivity
 public	lincs	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
-public	lincs	compound_aliases	character varying	LINCS	
+public	lincs	compound_aliases	character varying	LINCS	Compound aliases
 public	lincs	id	character varying	LINCS	LINCS perturbagen ID
 public	lincs	inchi_key	character varying	LINCS	InChIkey for molecule
-public	lincs	moa	character varying	LINCS	
+public	lincs	moa	character varying	LINCS	Mechanism of action
 public	lincs	mol_id	integer	CFChemDb	CFChemDb molecule ID
 public	lincs	pert_name	character varying	LINCS	LINCS perturbagen name
 public	lincs	sig_count	integer	LINCS	Count of expression signatures
@@ -62,10 +62,10 @@ public	properties	exact_mol_wt	double precision	RDKit, rdktools	Exact molecular 
 public	properties	fraction_csp3	double precision	RDKit, rdktools	Fraction of carbons sp3 hybridized
 public	properties	heavy_atom_count	integer	RDKit, rdktools	Non-H atom count
 public	properties	heavy_atom_mol_wt	double precision	RDKit, rdktools	Average molecular weight of the molecule ignoring hydrogens
-public	properties	max_abs_partial_charge	double precision	RDKit, rdktools	
-public	properties	max_partial_charge	double precision	RDKit, rdktools	
-public	properties	min_abs_partial_charge	double precision	RDKit, rdktools	
-public	properties	min_partial_charge	double precision	RDKit, rdktools	
+public	properties	max_abs_partial_charge	double precision	RDKit, rdktools	Max absolute Gasteiger partial charge, any atom
+public	properties	max_partial_charge	double precision	RDKit, rdktools	Max Gasteiger partial charge, any atom
+public	properties	min_abs_partial_charge	double precision	RDKit, rdktools	Min absolute Gasteiger partial charge, any atom
+public	properties	min_partial_charge	double precision	RDKit, rdktools	Min Gasteiger partial charge, any atom
 public	properties	mol_id	integer	CFChemDb	CFChemDb molecule ID
 public	properties	mol_wt	double precision	RDKit, rdktools	Average molecular weight of the molecule
 public	properties	nhohcount	integer	RDKit, rdktools	Count of NHs or OHs
@@ -89,19 +89,19 @@ public	properties	ring_count	integer	RDKit, rdktools	Number of SSSR rings
 public	properties	wildman_crippen_log_p	double precision	RDKit, rdktools	Default Wildman-Crippen LogP for a molecule
 public	refmet	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
 public	refmet	exactmass	character varying	RefMet	
-public	refmet	formula	character varying	RefMet	
+public	refmet	formula	character varying	RefMet	Molecular formula
 public	refmet	inchi_key	character varying	RefMet	InChIkey for molecule
 public	refmet	main_class	character varying	RefMet	
 public	refmet	mol_id	integer	CFChemDb	CFChemDb molecule ID
 public	refmet	pubchem_cid	integer	RefMet	PubChem compound ID (CID)
-public	refmet	refmet_name	character varying	RefMet	
+public	refmet	refmet_name	character varying	RefMet	RefMet compound name
 public	refmet	smiles	character varying	RefMet	SMILES for molecule
 public	refmet	sub_class	character varying	RefMet	
 public	refmet	super_class	character varying	RefMet	
 public	reprotox	cansmi	character varying	CFChemDb	CFChemDb RDKit canonical SMILES
-public	reprotox	cas_rn	character varying	ReproTox	
-public	reprotox	ls_id	character varying	ReproTox	
+public	reprotox	cas_rn	character varying	ReproTox	Chemical Abstracts Service (CAS) registry number
+public	reprotox	ls_id	character varying	ReproTox	LeadScope molecule ID
 public	reprotox	mol_id	integer	CFChemDb	CFChemDb molecule ID
 public	reprotox	pubchem_cid	character varying	ReproTox	PubChem compound ID (CID)
 public	reprotox	smiles	character varying	ReproTox	SMILES for molecule
-public	reprotox	term	character varying	ReproTox	
+public	reprotox	term	character varying	ReproTox	Anatomy/disease area term (Blood, CNS, Cardiovascular) 

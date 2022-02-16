@@ -1,6 +1,6 @@
 #!/bin/bash
 ###
-# https://www.rdkit.org/docs/Cartridge.html
+# https://maayanlab.cloud/sigcom-lincs/#/Download
 ###
 #
 T0=$(date +%s)

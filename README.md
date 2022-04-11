@@ -7,8 +7,18 @@ Common Fund projects and datasets.
 ## Dependencies
 
 * [RDKit](https://www.rdkit.org/)
-* [GitHub:rdkit-tools](https://github.com/jeremyjyang/rdkit-tools)
+* [rdkit-tools](https://github.com/jeremyjyang/rdkit-tools)
 * [PostgreSql](https://www.postgresql.org/)
+
+## `rdkit-tools` development environment
+
+CFChemDb relies on [RDKit](https://www.rdkit.org/), the RDKit
+PostgreSql cartridge, and Python package
+[rdkit-tools](https://github.com/jeremyjyang/rdkit-tools),
+developed specifically for CFChemDb, for cheminformatics
+and machine learning analytics. See 
+[rdkit-tools](https://github.com/jeremyjyang/rdkit-tools)
+documentation for further details.
 
 ## CFChemDb Workflow
 
@@ -45,5 +55,4 @@ The database is Dockerized, for flexible deployment and reuse.
 
 ## See also
 
-* [rdkit-tools](https://github.com/jeremyjyang/rdkit-tools)
 * [idg-cfde](https://github.com/druggablegenome/idg-cfde)

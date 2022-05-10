@@ -78,14 +78,20 @@ psql -e -d $DBNAME -c "ALTER TABLE $TNAME DROP COLUMN id"
 psql -e -d $DBNAME -c "CREATE INDEX mol_id_idx ON $TNAME (mol_id)"
 #
 # Export compounds still needing PubChem CIDs:
-psql -d $DBNAME -c "COPY (SELECT cansmi, id FROM mols WHERE id NOT IN (SELECT mol_id FROM $TNAME)) TO STDOUT WITH (FORMAT CSV,HEADER,DELIMITER E'\t')" \
+###
+psql -e -d $DBNAME -c "ALTER TABLE mols ADD COLUMN has_cid BOOLEAN DEFAULT FALSE"
+psql -e -d $DBNAME -c "UPDATE mols SET has_cid = TRUE FROM $TNAME WHERE mols.id=$TNAME.mol_id"
+psql -e -d $DBNAME -c "SELECT has_cid,COUNT(id) FROM mols GROUP BY has_cid"
+psql -d $DBNAME -c "COPY (SELECT cansmi,id FROM mols WHERE NOT has_cid) TO STDOUT WITH (FORMAT CSV,HEADER,DELIMITER E'\t')" \
 	>${TMPDIR}/${DBNAME}_mols_needing-pubchem.smi
+psql -e -d $DBNAME -c "ALTER TABLE mols DROP COLUMN has_cid"
 #
 xreffile=${TMPDIR}/${DBNAME}_mols_xrefs-pubchem.smi
 python3 -m BioClients.pubchem.Client get_smi2cid \
 	--i ${TMPDIR}/${DBNAME}_mols_needing-pubchem.smi \
 	--o ${xreffile}
 #
+LoadXrefsFile $xreffile $DBNAME $TNAME
 #
 #####################################################################
 # ChEBI

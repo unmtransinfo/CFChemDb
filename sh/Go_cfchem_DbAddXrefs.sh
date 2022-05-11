@@ -3,6 +3,8 @@
 # Add XRefs for all compounds in mols table.
 ###
 #
+set -e
+#
 T0=$(date +%s)
 #
 DBNAME="cfchemdb"
@@ -11,7 +13,7 @@ DBHOST="localhost"
 #
 TNAME="xrefs"
 #
-TMPDIR="$(cd $HOME/../data/CFDE/data/; pwd)/tmp/$(date +'%Y-%m-%d')"
+TMPDIR="$(cd $HOME/../data/CFDE/data/; pwd)/tmp"
 printf "TMPDIR: ${TMPDIR}\n"
 if [ ! -e $TMPDIR ]; then
 	mkdir -p $TMPDIR
@@ -27,9 +29,6 @@ function LoadXrefsFile {
   xrefnames=$(echo $colnames |sed 's/smiles\s//' |sed 's/name\s//')
   n_xrefs=$(echo $xrefnames |wc -w)
   printf "xrefnames ($n_xrefs): ${xrefnames}\n"
-  for xrefname in $xrefnames ; do
-    psql -e -d $dbname -c "ALTER TABLE $tname ADD COLUMN $xrefname VARCHAR(32)"
-  done
   #
   N=$[$(cat ${xreffile} |wc -l)-1]
   i=0
@@ -38,10 +37,13 @@ function LoadXrefsFile {
           line=$(cat ${xreffile} |sed '1d' |sed "${i}q;d")
           mol_id=$(echo "$line" |awk -F '\t' '{print $2}')
     vals=$(echo $line |awk '{$1=$2=""; print $0}')
-    vals=$(echo $vals |sed "s/\s/', '/g" |sed "s/^\(.*\)$/'\1'/")
-    printf "${i}/${N}. mol_id=${mol_id}; adding ${n_xrefs} xrefs: $(echo $xrefnames |
-sed 's/\s/, /g')\n"
-    psql -d $dbname -c "UPDATE $tname SET ($(echo $xrefnames |sed 's/\s/, /g')) = ROW(${vals}) WHERE mol_id = ${mol_id}"
+    i_xref="0"
+    for xrefname in $xrefnames ; do
+      i_xref=$[$i_xref + 1]
+      val=$(echo ${vals} |awk "{print \$${i_xref}}")
+      printf "${i}/${N}. mol_id=${mol_id}; adding xref_${i_xref}: ${xrefname}\n"
+      psql -e -d $dbname -c "INSERT INTO $tname (mol_id, xref_type, xref_value) VALUES (${mol_id}, '${xrefname}', '${val}')"
+    done
   done
 }
 #
@@ -82,22 +84,39 @@ psql -e -d $DBNAME -c "CREATE INDEX mol_id_idx ON $TNAME (mol_id)"
 psql -e -d $DBNAME -c "ALTER TABLE mols ADD COLUMN has_cid BOOLEAN DEFAULT FALSE"
 psql -e -d $DBNAME -c "UPDATE mols SET has_cid = TRUE FROM $TNAME WHERE mols.id=$TNAME.mol_id"
 psql -e -d $DBNAME -c "SELECT has_cid,COUNT(id) FROM mols GROUP BY has_cid"
-psql -d $DBNAME -c "COPY (SELECT cansmi,id FROM mols WHERE NOT has_cid) TO STDOUT WITH (FORMAT CSV,HEADER,DELIMITER E'\t')" \
+psql -e -d $DBNAME -c "COPY (SELECT cansmi,id FROM mols WHERE NOT has_cid) TO STDOUT WITH (FORMAT CSV,HEADER,DELIMITER E'\t')" \
 	>${TMPDIR}/${DBNAME}_mols_needing-pubchem.smi
 psql -e -d $DBNAME -c "ALTER TABLE mols DROP COLUMN has_cid"
+N=$(psql -qA -d $DBNAME -c "SELECT COUNT(id) FROM mols" |sed '2q;d')
+printf "Molecules needing PubChem_CIDs: %d / %d\n" $(echo ${TMPDIR}/${DBNAME}_mols_needing-pubchem.smi |wc -l) ${N}
 #
 xreffile=${TMPDIR}/${DBNAME}_mols_xrefs-pubchem.smi
-python3 -m BioClients.pubchem.Client get_smi2cid \
-	--i ${TMPDIR}/${DBNAME}_mols_needing-pubchem.smi \
-	--o ${xreffile}
+if [ ! -e ${xreffile} ]; then
+	python3 -m BioClients.pubchem.Client get_smi2cid \
+		--i ${TMPDIR}/${DBNAME}_mols_needing-pubchem.smi \
+		--o ${TMPDIR}/${DBNAME}_mols_needing-pubchem_smi2cid.tsv
+	# Rename, reorder columns:
+	printf "smiles\tmol_id\tpubchem_cid\n" >${xreffile}
+	cat ${TMPDIR}/${DBNAME}_mols_needing-pubchem_smi2cid.tsv \
+		|sed '1d' |awk -F '\t' '{print $2 "\t" $3 "\t" $1}' \
+		>>${xreffile}
+fi
 #
 LoadXrefsFile $xreffile $DBNAME $TNAME
 #
+exit #DEBUG
+#
 #####################################################################
-# ChEBI
+# ChEBI: from PubChem_CIDs
 xreffile=${TMPDIR}/${DBNAME}_mols_xrefs-chebi.smi
 if [ ! -e "$xreffile" ]; then
-
+	psql -e -d $DBNAME -c "COPY (SELECT xref_value pubchem_cid FROM xrefs WHERE xref_type = 'pubchem_cid') TO STDOUT WITH (FORMAT CSV,HEADER,DELIMITER E'\t')" \
+	|sed '1d' \
+	>${TMPDIR}/${DBNAME}_pccid.cid
+	python3 -m BioClients.emblebi.unichem.Client getFromSourceId \
+		--src_id_in 22 --src_id_out 7 \
+		--i ${TMPDIR}/${DBNAME}_pccid.cid \
+		--o ${TMPDIR}/${DBNAME}_pccid2chebi.tsv
 	printf "XRef file generated: ${xreffile}\n"
 else
 	printf "XRef file exists: ${xreffile}\n"

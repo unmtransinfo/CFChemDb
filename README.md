@@ -4,6 +4,8 @@ CFChemDb refers to the CFDE Cheminformatics Database and Development System,
 designed for chemicals (small molecules) with data from one or multiple
 Common Fund projects and datasets.
 
+<img src="doc/images/CFChemDb_schematic.png" align="center" height="300">
+
 ## Dependencies
 
 * [RDKit](https://www.rdkit.org/)
@@ -16,11 +18,13 @@ CFChemDb relies on [RDKit](https://www.rdkit.org/), the RDKit
 PostgreSql cartridge, and Python package
 [rdkit-tools](https://github.com/jeremyjyang/rdkit-tools),
 developed specifically for CFChemDb, for cheminformatics
-and machine learning analytics. See 
+and machine learning analytics. See
 [rdkit-tools](https://github.com/jeremyjyang/rdkit-tools)
 documentation for further details.
 
 ## CFChemDb Workflow
+
+<img src="doc/images/CFChemDb_ETL_Workflow.png" align="center" height="300">
 
 The CFChemDb can be built with the following workflow.
 

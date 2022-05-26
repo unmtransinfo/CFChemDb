@@ -36,6 +36,7 @@ The CFChemDb can be built with the following workflow.
 * [Go\_cfchem\_DbLoad\_ReproTox.sh](sh/Go_cfchem_DbLoad_ReproTox.sh)
 * [Go\_cfchem\_DbPostprocess.sh](sh/Go_cfchem_DbPostprocess.sh)
 * [Go\_cfchem\_DbAddProperties.sh](sh/Go_cfchem_DbAddProperties.sh)
+* [Go\_cfchem\_DbAddXrefs.sh](sh/Go_cfchem_DbAddXrefs.sh)
 
 ## Docker
 
@@ -55,8 +56,11 @@ The database is Dockerized, for flexible deployment and reuse.
 
 ## Demo notebook
 
-* [CFChemDb_Demo.ipynb](https://github.com/jeremyjyang/rdkit-tools/blob/master/python/CFChemDb_Demo.ipynb)
+* [CFChemDb\_Demo.ipynb](notebooks/CFChemDb_Demo.ipynb)
 
-## See also
+## Cloud hosted instance
 
-* [idg-cfde](https://github.com/druggablegenome/idg-cfde)
+A cloud hosted, public instance of CFChemDb is available for low
+volume research use, supported by CFDE. Database coordinates and
+credentials are available on request. For high volume use, the
+Docker container should be deployed locally.

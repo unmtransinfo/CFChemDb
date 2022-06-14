@@ -53,14 +53,13 @@ psql -d $DBNAME -c "COPY (SELECT cansmi, id FROM mols ORDER BY id) TO STDOUT WIT
 	>${TMPDIR}/${DBNAME}_mols.smi
 #
 ###
-if [ ! "$CONDA_EXE" ]; then
-	CONDA_EXE=$(which conda)
-fi
-if [ ! "$CONDA_EXE" -o ! -e "$CONDA_EXE" ]; then
-	echo "ERROR: conda not found."
-	exit
-fi
-#
+#if [ ! "$CONDA_EXE" ]; then
+#	CONDA_EXE=$(which conda)
+#fi
+#if [ ! "$CONDA_EXE" -o ! -e "$CONDA_EXE" ]; then
+#	echo "ERROR: conda not found."
+#	exit
+#fi
 ###
 psql -e -d $DBNAME -c "DROP TABLE IF EXISTS $TNAME"
 psql -e -d $DBNAME -c "CREATE TABLE $TNAME (mol_id INTEGER, xref_type VARCHAR(32), xref_value VARCHAR(32))"
@@ -107,7 +106,7 @@ LoadXrefsFile $xreffile $DBNAME $TNAME
 exit #DEBUG
 #
 #####################################################################
-# ChEBI: from PubChem_CIDs
+# ChEBI: via UniChem, from PubChem_CIDs
 xreffile=${TMPDIR}/${DBNAME}_mols_xrefs-chebi.smi
 if [ ! -e "$xreffile" ]; then
 	psql -e -d $DBNAME -c "COPY (SELECT xref_value pubchem_cid FROM xrefs WHERE xref_type = 'pubchem_cid') TO STDOUT WITH (FORMAT CSV,HEADER,DELIMITER E'\t')" \

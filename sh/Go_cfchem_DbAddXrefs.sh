@@ -103,7 +103,6 @@ fi
 #
 LoadXrefsFile $xreffile $DBNAME $TNAME
 #
-exit #DEBUG
 #
 #####################################################################
 # ChEBI: via UniChem, from PubChem_CIDs
@@ -116,12 +115,33 @@ if [ ! -e "$xreffile" ]; then
 		--src_id_in 22 --src_id_out 7 \
 		--i ${TMPDIR}/${DBNAME}_pccid.cid \
 		--o ${TMPDIR}/${DBNAME}_pccid2chebi.tsv
+	# Rename, reorder columns:
+	printf "inchikey\tpubchem_cid\tchebi_id\n" >${xreffile}
+	cat ${TMPDIR}/${DBNAME}_pccid2chebi.tsv \
+		|sed '1d' |awk -F '\t' '{print $3 "\t" $2 "\t" $5}' \
+		>>${xreffile}
 	printf "XRef file generated: ${xreffile}\n"
 else
 	printf "XRef file exists: ${xreffile}\n"
 fi
 #
-LoadXrefsFile $xreffile $DBNAME $TNAME
+###
+N=$[$(cat ${xreffile} |wc -l)-1]
+i=0
+while [ $i -lt $N ]; do
+  i=$[$i + 1]
+  line=$(cat ${xreffile} |sed '1d' |sed "${i}q;d")
+  pc_cid=$(echo "$line" |awk -F '\t' '{print $2}')
+  val=$(echo "$line" |awk -F '\t' '{print $3}')
+  xrefname="chebi_id"
+  printf "${i}/${N}. pc_cid=${pc_cid}; adding xref: ${xrefname}=${val}\n"
+  mol_id=$(psql -At -d $DBNAME -c "SELECT mol_id FROM $TNAME WHERE xref_value = '${pc_cid}' AND xref_type = 'pubchem_cid'" |head -1)
+  if [ ! "${mol_id}" ]; then
+    printf "ERROR: pc_cid '${pc_cid}' not found in ${TNAME}.\n"
+    continue
+  fi
+  psql -e -d $DBNAME -c "INSERT INTO $TNAME (mol_id, xref_type, xref_value) VALUES (${mol_id}, '${xrefname}', '${val}')"
+done
 ###
 #rm -rf $TMPDIR
 #

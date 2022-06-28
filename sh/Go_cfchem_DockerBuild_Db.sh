@@ -11,6 +11,8 @@ if [ $(whoami) != "root" ]; then
 	exit
 fi
 #
+T0=$(date +%s)
+#
 cwd=$(pwd)
 #
 DBNAME="cfchemdb"
@@ -20,25 +22,20 @@ docker version
 INAME="${DBNAME}_db"
 TAG="latest"
 #
+DBDIR="/home/data/CFDE/CFChemDb/"
+dumpfile="$DBDIR/${DBNAME}.pgdump"
+#
+if [ ! -e "${dumpfile}" ]; then
+	printf "Dump file not found: %s\n" "${dumpfile}"
+	exit 1
+fi
+#
 #Subdir needed for Docker.
 if [ ! -e "${cwd}/data" ]; then
 	mkdir ${cwd}/data/
 fi
 #
-tnames="$(echo '\d' |sudo -u postgres psql -At -d $DBNAME |grep table |awk -F '|' '{print $2}')"
-for tname in $tnames ; do
-	sudo -u postgres psql -e -d ${DBNAME} -c "ALTER TABLE $tname OWNER TO postgres"
-done
-#
-TMPDIR="/tmp/CFChemDb"
-if [ ! -e "$TMPDIR" ]; then
-	mkdir -p $TMPDIR
-fi
-dumpfile="$TMPDIR/${DBNAME}.pgdump"
-sudo -u postgres pg_dump --no-owner --no-privileges --format=custom -d ${DBNAME} >${dumpfile}
 cp ${dumpfile} ${cwd}/data/
-#
-T0=$(date +%s)
 #
 ###
 # Build image from Dockerfile.
@@ -48,7 +45,6 @@ docker build -f ${dockerfile} -t ${INAME}:${TAG} .
 printf "Elapsed time: %ds\n" "$[$(date +%s) - ${T0}]"
 #
 rm -f ${cwd}/data/${DBNAME}.pgdump
-rm -f ${dumpfile}
 #
 docker images
 #

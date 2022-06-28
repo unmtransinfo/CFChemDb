@@ -42,6 +42,7 @@ The CFChemDb can be built with the following workflow.
 
 The database is Dockerized, for flexible deployment and reuse.
 
+* [Go\_cfchem\_DbDump.sh](sh/Go_cfchem_DbDump.sh)
 * [Go\_DockerBuild\_Db.sh](sh/Go_DockerBuild_Db.sh)
 * [Go\_DockerClean.sh](sh/Go_DockerClean.sh)
 * [Go\_DockerHubPull.sh](sh/Go_DockerHubPull.sh)

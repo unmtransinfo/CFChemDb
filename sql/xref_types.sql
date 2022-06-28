@@ -1,0 +1,1 @@
+SELECT xref_type, COUNT(xref_value) xref_count, COUNT(DISTINCT mol_id) mol_id_count FROM xrefs GROUP BY xref_type ;

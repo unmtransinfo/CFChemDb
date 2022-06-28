@@ -41,6 +41,9 @@ The CFChemDb can be built with the following workflow.
 ## Docker
 
 The database is Dockerized, for flexible deployment and reuse.
+Latest version available at: [DockerHub:cfchemdb\_db](https://hub.docker.com/repository/docker/unmtransinfo/cfchemdb_db)
+
+### Docker workflow:
 
 * [Go\_cfchem\_DbDump.sh](sh/Go_cfchem_DbDump.sh)
 * [Go\_DockerBuild\_Db.sh](sh/Go_DockerBuild_Db.sh)
@@ -49,7 +52,6 @@ The database is Dockerized, for flexible deployment and reuse.
 * [Go\_DockerHubPullRun.sh](sh/Go_DockerHubPullRun.sh)
 * [Go\_DockerHubPush.sh](sh/Go_DockerHubPush.sh)
 * [Go\_DockerRun.sh](sh/Go_DockerRun.sh)
-* [DockerHub:cfchemdb\_db](https://hub.docker.com/repository/docker/unmtransinfo/cfchemdb_db)
 
 ## Testing
 

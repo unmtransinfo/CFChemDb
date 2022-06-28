@@ -47,5 +47,5 @@ psql -h localhost -p 5442 -d cfchemdb -U commoner -c "SELECT COUNT(*) FROM mols"
 #
 ###
 # Copy this file to cloud server thus:
-# scp sh/Go_DockerHubPullRun.sh unmtid-dbs.net:~/bin/
+# scp sh/Go_cfchem_DockerHubPullRun.sh unmtid-dbs.net:~/bin/
 #

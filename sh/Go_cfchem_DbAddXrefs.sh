@@ -94,14 +94,19 @@ if [ ! -e ${xreffile} ]; then
 	python3 -m BioClients.pubchem.Client get_smi2cid \
 		--i ${TMPDIR}/${DBNAME}_mols_needing-pubchem.smi \
 		--o ${TMPDIR}/${DBNAME}_mols_needing-pubchem_smi2cid.tsv
+	# Why are many CIDs 0? Fix BioClients.pubchem.
+	###
 	# Rename, reorder columns:
 	printf "smiles\tmol_id\tpubchem_cid\n" >${xreffile}
 	cat ${TMPDIR}/${DBNAME}_mols_needing-pubchem_smi2cid.tsv \
 		|sed '1d' |awk -F '\t' '{print $2 "\t" $3 "\t" $1}' \
+		|grep -v '\s0$' \
 		>>${xreffile}
 fi
 #
 LoadXrefsFile $xreffile $DBNAME $TNAME
+# Patch:
+psql -e -d $DBNAME -c "DELETE FROM xrefs WHERE xref_type = 'pubchem_cid' AnD xref_value = '0'"
 #
 #
 #####################################################################

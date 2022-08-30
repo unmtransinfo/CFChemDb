@@ -38,6 +38,10 @@ The CFChemDb can be built with the following workflow.
 * [Go\_cfchem\_DbAddProperties.sh](sh/Go_cfchem_DbAddProperties.sh)
 * [Go\_cfchem\_DbAddXrefs.sh](sh/Go_cfchem_DbAddXrefs.sh)
 
+## Cheminformatics methods
+
+See [Cheminfo.md](Cheminfo.md) for details.
+
 ## Docker
 
 The database is Dockerized, for flexible deployment and reuse.

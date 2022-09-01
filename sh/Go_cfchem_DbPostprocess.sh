@@ -1,6 +1,7 @@
 #!/bin/bash
 ###
 # https://www.rdkit.org/docs/Cartridge.html
+# FPs generated are all 2048 bits to agree with rdkit-tools defaults.
 ###
 #
 T0=$(date +%s)
@@ -21,15 +22,17 @@ psql -d $DBNAME -c "CREATE INDEX molidx ON mols USING gist(molecule)"
 ### Add FPs to mols table.
 # https://www.rdkit.org/docs/GettingStartedInPython.html
 # Path-based, Daylight-like.
+psql -d $DBNAME -c "SET rdkit.rdkit_fp_size=2048"
 psql -d $DBNAME -c "ALTER TABLE mols DROP COLUMN IF EXISTS fp"
 psql -d $DBNAME -c "ALTER TABLE mols ADD COLUMN fp BFP"
 psql -d $DBNAME -c "UPDATE mols SET fp = rdkit_fp(molecule)"
 psql -d $DBNAME -c "CREATE INDEX fps_fp_idx ON mols USING gist(fp)"
 #
 # Morgan (Circular) Fingerprints (with radius=2 ECFP4-like).
+psql -d $DBNAME -c "SET rdkit.morgan_fp_size=2048"
 psql -d $DBNAME -c "ALTER TABLE mols DROP COLUMN IF EXISTS ecfp"
 psql -d $DBNAME -c "ALTER TABLE mols ADD COLUMN ecfp BFP"
-psql -d $DBNAME -c "UPDATE mols SET ecfp = morganbv_fp(molecule)"
+psql -d $DBNAME -c "UPDATE mols SET ecfp = morganbv_fp(molecule, 2)"
 psql -d $DBNAME -c "CREATE INDEX fps_ecfp_idx ON mols USING gist(ecfp)"
 #
 ###
